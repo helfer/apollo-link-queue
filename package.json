@@ -18,6 +18,7 @@
     "typescript": "^2.6.2"
   },
   "main": "build/dist/index.js",
+  "types": "build/dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "tslint src/*.ts* src/**/*.ts*",
