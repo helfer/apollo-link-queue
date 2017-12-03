@@ -1,5 +1,7 @@
 # apollo-link-queue
 
+[![npm version](https://badge.fury.io/js/apollo-link-queue.svg)](https://badge.fury.io/js/apollo-link-queue)
+
 An Apollo Link that acts as a gate and queues requests when the gate is closed. This can be used when there is no internet connection or when the user has explicitly set an app to offline mode.
 
 ### Installation
