@@ -21,6 +21,10 @@
   "module": "build/dist/index.js",
   "jsnext:main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "helfer/apollo-link-queue"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "tslint src/*.ts* src/**/*.ts*",
