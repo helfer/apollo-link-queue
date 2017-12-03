@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "6"
+
+script:
+  - yarn install && yarn test && yarn run coverage && yarn run lint
+
+sudo: false
+
+notifications:
+  email: false
