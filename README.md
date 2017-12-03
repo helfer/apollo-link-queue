@@ -2,7 +2,17 @@
 
 An Apollo Link that acts as a gate and queues requests when the gate is closed. This can be used when there is no internet connection or when the user has explicitly set an app to offline mode.
 
-## Usage
+### Installation
+
+```
+npm install apollo-link-queue
+```
+or
+```
+yarn add apollo-link-queue
+```
+
+### Usage
 
 ```js
 import QueueLink from 'apollo-link-queue';
