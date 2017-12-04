@@ -28,7 +28,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "tslint src/*.ts* src/**/*.ts*",
-    "test": "react-scripts-ts test --coverage --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/index.tsx --collectCoverageFrom=!src/**/*.snap && yarn run lint",
+    "test": "react-scripts-ts test --coverage --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/index.ts --collectCoverageFrom=!src/TestUtils.ts && yarn run lint",
     "testonly": "react-scripts-ts test --env=jsdom",
     "coverage": "codecov -f coverage/*.json"
   },
