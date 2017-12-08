@@ -39,7 +39,7 @@ import { RetryLink } from 'apollo-link-retry';
 
 import QueueLink from 'apollo-link-queue';
 
-const queueLink = new QueueLink();
+const offlineLink = new QueueLink();
 
 // Note: remove these listeners when your app is shut down to avoid leaking listeners.
 window.addEventListener('offline', () => offlineLink.close());
