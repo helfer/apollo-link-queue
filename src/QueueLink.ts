@@ -20,10 +20,7 @@ export default class QueueLink extends ApolloLink {
 
     public open() {
         this.isOpen = true;
-        this.opQueue.forEach(({ operation, forward, observer }) => {
-            forward(operation).subscribe(observer);
-        });
-        this.opQueue = [];
+        this.replayFirst()
     }
 
     public close() {
@@ -38,6 +35,16 @@ export default class QueueLink extends ApolloLink {
             this.enqueue({ operation, forward, observer });
             return () => this.cancelOperation({ operation, forward, observer });
         });
+    }
+
+    // Replay mutations sequentially
+    private replayFirst() {
+      const { forward, operation, observer }: OperationQueueEntry = this.opQueue.shift();
+      forward(operation).subscribe((arg: any) => {
+        if (this.opQueue.length > 1) this.replayFirst();
+        observer.next(arg);
+        observer.complete();
+      })
     }
 
     private cancelOperation(entry: OperationQueueEntry) {
