@@ -14,6 +14,7 @@
     "graphql-tag": "^2.4.2",
     "nyc": "^11.2.1",
     "react-scripts-ts": "^2.6.0",
+    "ts-jest": "^22.4.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   },
