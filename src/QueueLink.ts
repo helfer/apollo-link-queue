@@ -35,8 +35,9 @@ export default class QueueLink extends ApolloLink {
             return forward(operation);
         }
         return new Observable(observer => {
-            this.enqueue({ operation, forward, observer });
-            return () => this.cancelOperation({ operation, forward, observer });
+            const operationEntry = { operation, forward, observer };
+            this.enqueue(operationEntry);
+            return () => this.cancelOperation(operationEntry);
         });
     }
 
