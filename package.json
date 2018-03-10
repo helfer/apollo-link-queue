@@ -1,6 +1,6 @@
 {
   "name": "apollo-link-queue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A link to queue requests when a certain condition is met (eg. device is offline)",
   "dependencies": {
     "apollo-link": "^0.7.0"
