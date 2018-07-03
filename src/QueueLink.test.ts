@@ -49,6 +49,27 @@ describe('OnOffLink', () => {
             jest.runAllTimers();
         });
     });
+    it('skips the queue when asked to', () => {
+        const opWithSkipQueue: GraphQLRequest = {
+            query: gql`{ hello }`,
+            context: {
+                skipQueue: true,
+            },
+        };
+        onOffLink.close();
+        return new Promise((resolve, reject) => {
+            execute(link, opWithSkipQueue).subscribe({
+                next: (data) => undefined,
+                error: (error) => reject(error),
+                complete: () => {
+                    expect(testLink.operations.length).toBe(1);
+                    expect(testLink.operations[0].query).toEqual(op.query);
+                    resolve();
+                },
+            });
+            jest.runAllTimers();
+        });
+    });
     it('passes through errors', () => {
         const testError = new Error('Hello darkness my old friend');
         const opWithError: GraphQLRequest = {
