@@ -113,7 +113,7 @@ describe('OnOffLink', () => {
     it('removes operations from the queue that are cancelled while closed', () => {
         onOffLink.close();
         const observable = execute(link, op);
-        const subscriber = observable.subscribe(() => {})
+        const subscriber = observable.subscribe(() => { /* do nothing */ });
         subscriber.unsubscribe();
         onOffLink.open();
         expect(testLink.operations.length).toBe(0);
