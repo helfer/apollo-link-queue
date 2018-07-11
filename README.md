@@ -51,3 +51,41 @@ this.link = ApolloLink.from([
     new HttpLink({ uri: URI_TO_YOUR_GRAPHQL_SERVER }),
 ]);
 ```
+
+### Deduplicate
+
+It's possible to deduplicate operations while the queue is closed.
+This for example allows to only save the newest changes without the steps between.
+
+```js
+import { ApolloLink } from 'apollo-link';
+import { BatchHttpLink } from 'apollo-link-batch-http';
+import QueueLink from 'apollo-link-queue';
+
+const offlineLink = new QueueLink({
+    /**
+     * Decides which entry to keep in the queue in case of duplicate entries.
+     * Possible values:
+     *  - last: removes existing duplicate
+     *  - first: ignores new duplicate
+     *  - all: doesn't deduplicate
+     *
+     * Defaults to 'all'.
+     */
+    keepPolicy: 'last',
+
+    /**
+     * Specifies which entries are considered duplicates
+     *
+     * Defaults to comparing operation operationA.toKey() === operationB.toKey()
+     * https://www.apollographql.com/docs/link/overview.html
+     */
+    isDuplicate: (a, b) => (a.operationName === 'save' &&
+        a.operationName === b.operationName && a.variables.id === b.variables.id)
+});
+
+this.link = ApolloLink.from([
+    offlineLink,
+    new BatchHttpLink({ uri: URI_TO_YOUR_GRAPHQL_SERVER }),
+]);
+```

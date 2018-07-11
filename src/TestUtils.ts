@@ -2,10 +2,14 @@ import {
     ApolloLink,
     Operation,
     Observable,
+    execute,
 } from 'apollo-link';
 import {
     ExecutionResult,
 } from 'graphql';
+import {
+    GraphQLRequest
+} from 'apollo-link/src/types';
 
 export class TestLink extends ApolloLink {
     public operations: Operation[];
@@ -76,3 +80,18 @@ export const assertObservableSequence = (
         initializer(sub);
     });
 };
+
+export function executeMultiple(link: ApolloLink, ...operations: GraphQLRequest[]) {
+    return new Observable(sub => {
+        let i = 0;
+        const s = {
+            next: (v: any) => sub.next(v),
+            error: (e: any) => sub.error(e),
+            complete() {
+                i++;
+                if (i === operations.length) sub.complete()
+            }
+        };
+        operations.forEach(op => execute(link, op).subscribe(s))
+    });
+}

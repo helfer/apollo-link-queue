@@ -1,6 +1,7 @@
 import QueueLink from './QueueLink';
 import {
     assertObservableSequence,
+    executeMultiple,
     TestLink,
 } from './TestUtils';
 import {
@@ -21,10 +22,23 @@ describe('OnOffLink', () => {
         },
     };
 
+    const testResponse2 = {
+        data: {
+            hello2: 'World',
+        },
+    };
+
     const op: GraphQLRequest = {
-        query: gql`{ hello }`,
+        query: gql`query hello { hello }`,
         context: {
             testResponse,
+        },
+    };
+
+    const op2: GraphQLRequest = {
+        query: gql`query hello2 { hello }`,
+        context: {
+            testResponse: testResponse2,
         },
     };
 
@@ -94,6 +108,7 @@ describe('OnOffLink', () => {
         expect(testLink.operations.length).toBe(0);
         sub.unsubscribe();
     });
+
     it('releases held requests when you open it', () => {
         onOffLink.close();
         return assertObservableSequence(
@@ -105,6 +120,68 @@ describe('OnOffLink', () => {
             () => {
                 expect(testLink.operations.length).toBe(0);
                 onOffLink.open();
+                expect(testLink.operations.length).toBe(1);
+                jest.runAllTimers();
+            },
+        );
+    });
+
+    it('releases held deduplicated requests when you open it (last)', () => {
+        const dedupOnOffLink = new QueueLink({keepPolicy: "last"});
+        const myLink = ApolloLink.from([dedupOnOffLink, testLink]);
+        dedupOnOffLink.close();
+        return assertObservableSequence(
+            executeMultiple(myLink, op, op2, op),
+            [
+                { type: 'next', value: testResponse2 },
+                { type: 'next', value: testResponse },
+                { type: 'complete' },
+            ],
+            () => {
+                expect(testLink.operations.length).toBe(0);
+                dedupOnOffLink.open();
+                expect(testLink.operations.length).toBe(2);
+                jest.runAllTimers();
+            },
+        );
+    });
+
+    it('releases held deduplicated requests when you open it (first)', () => {
+        const dedupOnOffLink = new QueueLink({keepPolicy: "first"});
+        const myLink = ApolloLink.from([dedupOnOffLink, testLink]);
+        dedupOnOffLink.close();
+        return assertObservableSequence(
+            executeMultiple(myLink, op, op2, op),
+            [
+                { type: 'next', value: testResponse },
+                { type: 'next', value: testResponse2 },
+                { type: 'complete' },
+            ],
+            () => {
+                expect(testLink.operations.length).toBe(0);
+                dedupOnOffLink.open();
+                expect(testLink.operations.length).toBe(2);
+                jest.runAllTimers();
+            },
+        );
+    });
+
+    it('releases held deduplicated requests when you open it (all)', () => {
+        const dedupOnOffLink = new QueueLink({keepPolicy: "all"});
+        const myLink = ApolloLink.from([dedupOnOffLink, testLink]);
+        dedupOnOffLink.close();
+        return assertObservableSequence(
+            executeMultiple(myLink, op, op2, op),
+            [
+                { type: 'next', value: testResponse },
+                { type: 'next', value: testResponse2 },
+                { type: 'next', value: testResponse },
+                { type: 'complete' },
+            ],
+            () => {
+                expect(testLink.operations.length).toBe(0);
+                dedupOnOffLink.open();
+                expect(testLink.operations.length).toBe(3);
                 jest.runAllTimers();
             },
         );
