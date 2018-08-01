@@ -67,7 +67,7 @@ describe('OnOffLink', () => {
     });
     it('skips the queue when asked to', () => {
         const opWithSkipQueue: GraphQLRequest = {
-            query: gql`{ hello }`,
+            query: gql`query hello { hello }`,
             context: {
                 skipQueue: true,
             },
