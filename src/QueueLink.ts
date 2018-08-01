@@ -43,6 +43,13 @@ const defaultOptions: QueueLink.Options = {
     isDuplicate: (a: Operation, b: Operation) => a.toKey() === b.toKey()
 };
 
+export class DedupedByQueueError extends Error {
+    constructor() {
+        super('Operation got deduplicated by apollo-link-queue.');
+        Object.defineProperty(this, 'name', { value: 'DedupedByQueueError' });
+    }
+}
+
 export default class QueueLink extends ApolloLink {
     private opQueue: OperationQueueEntry[] = [];
     private isOpen: boolean = true;
@@ -96,7 +103,7 @@ export default class QueueLink extends ApolloLink {
                 const alreadyInQueue = this.opQueue.some(isDuplicate);
                 if (alreadyInQueue) {
                     // if there is already a duplicate entry the new one gets ignored
-                    entry.observer.complete()
+                    entry.observer.error(new DedupedByQueueError());
                 } else {
                     this.opQueue.push(entry);
                 }
@@ -106,7 +113,7 @@ export default class QueueLink extends ApolloLink {
                 if (index !== -1) {
                     // if there is already a duplicate entry it gets removed
                     const [duplicate] = this.opQueue.splice(index, 1);
-                    duplicate.observer.complete();
+                    duplicate.observer.error(new DedupedByQueueError());
                 }
                 this.opQueue.push(entry);
                 break;

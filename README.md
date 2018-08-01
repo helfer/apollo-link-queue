@@ -85,6 +85,12 @@ const offlineLink = new QueueLink({
 });
 
 this.link = ApolloLink.from([
+    new RetryLink({
+      attempts: {
+        // We don't want to retry deduped operations
+        retryIf: (error, _operation) => !!error && error.name !== 'DedupedByQueueError'
+      }
+    }),
     offlineLink,
     new BatchHttpLink({ uri: URI_TO_YOUR_GRAPHQL_SERVER }),
 ]);

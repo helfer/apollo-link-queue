@@ -1,4 +1,6 @@
-import QueueLink from './QueueLink';
+import QueueLink, {
+    DedupedByQueueError
+} from './QueueLink';
 import {
     assertObservableSequence,
     executeMultiple,
@@ -133,6 +135,7 @@ describe('OnOffLink', () => {
         return assertObservableSequence(
             executeMultiple(myLink, op, op2, op),
             [
+                { type: 'error', value: new DedupedByQueueError()},
                 { type: 'next', value: testResponse2 },
                 { type: 'next', value: testResponse },
                 { type: 'complete' },
@@ -153,6 +156,7 @@ describe('OnOffLink', () => {
         return assertObservableSequence(
             executeMultiple(myLink, op, op2, op),
             [
+                { type: 'error', value: new DedupedByQueueError()},
                 { type: 'next', value: testResponse },
                 { type: 'next', value: testResponse2 },
                 { type: 'complete' },

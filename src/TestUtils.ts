@@ -43,7 +43,7 @@ export interface Unsubscribable {
 }
 
 export const assertObservableSequence = (
-    observable: Observable<ExecutionResult>,
+    observable: Observable<ExecutionResult | Error>,
     sequence: ObservableValue[],
     initializer: (sub: Unsubscribable) => void = () => undefined,
 ): Promise<boolean | Error> => {
@@ -54,7 +54,8 @@ export const assertObservableSequence = (
     return new Promise((resolve, reject) => {
         const sub = observable.subscribe({
             next: (value) => {
-                expect({ type: 'next', value }).toEqual(sequence[index]);
+                const type = value instanceof Error ? 'error' : 'next';
+                expect({ type, value }).toEqual(sequence[index]);
                 index++;
                 if (index === sequence.length) {
                     resolve(true);
@@ -82,16 +83,15 @@ export const assertObservableSequence = (
 };
 
 export function executeMultiple(link: ApolloLink, ...operations: GraphQLRequest[]) {
-    return new Observable(sub => {
-        let i = 0;
-        const s = {
-            next: (v: any) => sub.next(v),
-            error: (e: any) => sub.error(e),
-            complete() {
-                i++;
-                if (i === operations.length) sub.complete()
-            }
-        };
-        operations.forEach(op => execute(link, op).subscribe(s))
-    });
+    return Observable.from(operations.map(op => execute(link, op)))
+        .flatMap(o => new Observable(sub => {
+            o.subscribe({
+                next: (v: any) => sub.next(v),
+                error: (e: any) => {
+                    sub.next(e);
+                    sub.complete();
+                },
+                complete: () => sub.complete()
+            })
+        }));
 }
