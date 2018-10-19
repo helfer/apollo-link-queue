@@ -118,4 +118,16 @@ describe('OnOffLink', () => {
         onOffLink.open();
         expect(testLink.operations.length).toBe(0);
     });
+
+
+    it('filters op', () => {
+        const onOffLinkFilter = new QueueLink({ filter: "mutation" });
+        onOffLinkFilter.close();
+        const filterLink = ApolloLink.from([onOffLinkFilter, testLink]);
+        execute(filterLink, op).subscribe({
+        });
+        jest.runAllTimers();
+        expect(testLink.operations.length).toBe(0);
+    });
+
 });
