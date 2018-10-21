@@ -130,4 +130,85 @@ describe('OnOffLink', () => {
         expect(testLink.operations.length).toBe(0);
     });
 
+
+    it('Test mutation filter', () => {
+        const onOffLinkFilter = new QueueLink({ filter: "mutation" });
+        onOffLinkFilter.close();
+        const filterLink = ApolloLink.from([onOffLinkFilter, testLink]);
+        execute(filterLink, op).subscribe({
+        });
+        jest.runAllTimers();
+        onOffLinkFilter.open();
+        expect(testLink.operations.length).toBe(0);
+    });
+
+    it('Test query filter', () => {
+        const onOffLinkFilter = new QueueLink({ filter: "query" });
+        onOffLinkFilter.close();
+        const filterLink = ApolloLink.from([onOffLinkFilter, testLink]);
+        execute(filterLink, op).subscribe({
+        });
+        jest.runAllTimers();
+        onOffLinkFilter.open();
+        expect(testLink.operations.length).toBe(1);
+    });
+
+
+    it('store test', () => {
+        let operations = [];
+        const storageEngine = {
+            getItem() {
+                return JSON.stringify(operations);
+            },
+            removeItem() {
+                operations = [];
+            },
+            setItem(key, content) {
+                console.log(content);
+                operations = JSON.parse(content);
+            }
+        };
+        const onOffLinkFilter = new QueueLink({
+            store: {
+                engine: storageEngine,
+                storeKey: "test"
+            }
+        });
+        onOffLinkFilter.close();
+        const filterLink = ApolloLink.from([onOffLinkFilter, testLink]);
+        execute(filterLink, op).subscribe({
+        });
+        jest.runAllTimers();
+        onOffLinkFilter.open();
+        expect(testLink.operations.length).toBe(1);
+    });
+
+    it('store test promises', () => {
+        let operations = [];
+        const storageEngine = {
+            getItem() {
+                return Promise.resolve(JSON.stringify(operations));
+            },
+            removeItem() {
+                operations = [];
+            },
+            setItem(key, content) {
+                console.log(content);
+                operations = JSON.parse(content);
+            }
+        };
+        const onOffLinkFilter = new QueueLink({
+            store: {
+                engine: storageEngine,
+                storeKey: "test"
+            }
+        });
+        onOffLinkFilter.close();
+        const filterLink = ApolloLink.from([onOffLinkFilter, testLink]);
+        execute(filterLink, op).subscribe({
+        });
+        jest.runAllTimers();
+        onOffLinkFilter.open();
+        expect(testLink.operations.length).toBe(1);
+    });
 });
