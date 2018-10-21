@@ -117,26 +117,20 @@ export default class QueueLink extends ApolloLink {
     }
 
     private matchesOperation(filter: string, operation: Operation): boolean {
-        if (operation.query && operation.query.definitions) {
-            return operation.query.definitions.filter((e) => {
-                return (e as any).operation === filter
-            }).length > 0;
-        } else {
-            return false;
-        }
+        return operation.query.definitions.filter((e) => {
+            return (e as any).operation === filter
+        }).length > 0;
     }
 
     private restoreDataFromStore() {
         if (this.store) {
-            const store = this.store.getItem(this.storeKey);
-            if (typeof store === 'string') {
-                this.opQueue = JSON.parse(store as string);
+            const savedData = this.store.getItem(this.storeKey);
+            if (typeof savedData === 'string') {
+                this.opQueue = JSON.parse(savedData as string);
             }
-            else {
-                store.then((data) => {
+            if (typeof savedData === 'object') {
+                savedData.then((data) => {
                     this.opQueue = JSON.parse(data);
-                }).catch((err) => {
-                    console.log(err);
                 });
             }
         }
