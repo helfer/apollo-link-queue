@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "description": "A link to queue requests when a certain condition is met (eg. device is offline)",
   "dependencies": {
-    "apollo-link": "^0.7.0"
+    "apollo-link": "^1.2.3"
   },
   "devDependencies": {
     "@types/graphql": "^0.11.7",
