@@ -90,7 +90,7 @@ describe('OnOffLink', () => {
     });
     it('holds requests when you close it', () => {
         onOffLink.close();
-        const sub = execute(link, op).subscribe(() => null);
+        const sub = execute(link, op).subscribe(() => undefined);
         expect(testLink.operations.length).toBe(0);
         sub.unsubscribe();
     });

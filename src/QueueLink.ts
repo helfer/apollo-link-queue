@@ -5,7 +5,7 @@ import {
     FetchResult,
     NextLink,
 } from 'apollo-link';
-import { Observer } from "zen-observable-ts";
+import { Observer } from 'zen-observable-ts';
 
 interface OperationQueueEntry {
     operation: Operation;
@@ -16,7 +16,7 @@ interface OperationQueueEntry {
 
 export default class QueueLink extends ApolloLink {
     private opQueue: OperationQueueEntry[] = [];
-    private isOpen: boolean = true;
+    private isOpen = true;
 
     public open() {
         this.isOpen = true;
@@ -30,7 +30,7 @@ export default class QueueLink extends ApolloLink {
         this.isOpen = false;
     }
 
-    public request(operation: Operation, forward: NextLink ) {
+    public request(operation: Operation, forward: NextLink) {
         if (this.isOpen) {
             return forward(operation);
         }

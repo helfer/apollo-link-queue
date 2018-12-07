@@ -7,16 +7,17 @@
   },
   "devDependencies": {
     "@types/graphql": "^0.11.7",
-    "@types/jest": "^20.0.8",
+    "@types/jest": "^23.0.1",
     "@types/node": "^8.0.26",
     "codecov": "^2.3.0",
     "graphql": "^0.11.7",
     "graphql-tag": "^2.4.2",
+    "jest": "^23.0.1",
     "nyc": "^11.2.1",
     "react-scripts-ts": "^2.6.0",
-    "ts-jest": "^22.4.0",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "tslint": "^5.11.0",
+    "typescript": "^2.6.2",
+    "zen-observable-ts": "^0.8.11"
   },
   "main": "build/dist/index.js",
   "module": "build/dist/index.js",
@@ -28,8 +29,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "tslint src/*.ts* src/**/*.ts*",
-    "test": "react-scripts-ts test --coverage --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/index.ts --collectCoverageFrom=!src/TestUtils.ts && yarn run lint",
+    "lint": "tslint -c tslint.json src/*.ts* src/**/*.ts*",
+    "test": "yarn run lint && react-scripts-ts test --coverage --collectCoverageFrom=src/**/*.ts* --collectCoverageFrom=!src/index.ts --collectCoverageFrom=!src/TestUtils.ts",
     "testonly": "react-scripts-ts test --env=jsdom",
     "coverage": "codecov -f coverage/*.json"
   },
