@@ -29,6 +29,10 @@ export default class QueueLink extends ApolloLink {
     public close() {
         this.isOpen = false;
     }
+    
+    public clear() {
+        this.opQueue = [];
+    }
 
     public request(operation: Operation, forward: NextLink) {
         if (this.isOpen) {
