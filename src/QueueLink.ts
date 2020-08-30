@@ -7,7 +7,7 @@ import {
 import {
     Observable,
     Observer,
-    } from '@apollo/client/utilities';
+} from '@apollo/client/utilities';
 
 interface OperationQueueEntry {
     operation: Operation;
@@ -39,7 +39,7 @@ export default class QueueLink extends ApolloLink {
         if (operation.getContext().skipQueue) {
             return forward(operation);
         }
-        return new Observable(observer => {
+        return new Observable<FetchResult>((observer: Observer<FetchResult>) => {
             const operationEntry = { operation, forward, observer };
             this.enqueue(operationEntry);
             return () => this.cancelOperation(operationEntry);
