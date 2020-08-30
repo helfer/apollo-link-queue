@@ -7,7 +7,7 @@ import {
     execute,
     GraphQLRequest,
     ApolloLink,
-} from 'apollo-link';
+    } from '@apollo/client/link/core';
 import gql from 'graphql-tag';
 
 describe('OnOffLink', () => {

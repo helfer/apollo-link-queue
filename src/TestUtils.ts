@@ -1,8 +1,8 @@
 import {
     ApolloLink,
     Operation,
-    Observable,
-} from 'apollo-link';
+} from '@apollo/client/link/core';
+import { Observable } from '@apollo/client/utilities';
 import {
     ExecutionResult,
 } from 'graphql';
