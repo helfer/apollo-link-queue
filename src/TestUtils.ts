@@ -1,8 +1,9 @@
 import {
     ApolloLink,
+    FetchResult,
     Operation,
 } from '@apollo/client/link/core';
-import { Observable } from '@apollo/client/utilities';
+import { Observable, Observer } from '@apollo/client/utilities';
 import {
     ExecutionResult,
 } from 'graphql';
@@ -17,7 +18,7 @@ export class TestLink extends ApolloLink {
     public request (operation: Operation) {
         this.operations.push(operation);
         // TODO(helfer): Throw an error if neither testError nor testResponse is defined
-        return new Observable(observer => {
+        return new Observable<FetchResult>((observer: Observer<FetchResult>) => {
             if (operation.getContext().testError) {
                 setTimeout(() => observer.error(operation.getContext().testError), 0);
                 return;
@@ -49,14 +50,14 @@ export const assertObservableSequence = (
     }
     return new Promise((resolve, reject) => {
         const sub = observable.subscribe({
-            next: (value) => {
+            next: (value: FetchResult) => {
                 expect({ type: 'next', value }).toEqual(sequence[index]);
                 index++;
                 if (index === sequence.length) {
                     resolve(true);
                 }
             },
-            error: (value) => {
+            error: (value: FetchResult) => {
                 expect({ type: 'error', value }).toEqual(sequence[index]);
                 index++;
                 // This check makes sure that there is no next element in
