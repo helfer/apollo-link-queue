@@ -1,11 +1,13 @@
 import {
     ApolloLink,
-    Observable,
     Operation,
     FetchResult,
     NextLink,
-} from 'apollo-link';
-import { Observer } from 'zen-observable-ts';
+} from '@apollo/client/link/core';
+import {
+    Observable,
+    Observer,
+    } from '@apollo/client/utilities';
 
 interface OperationQueueEntry {
     operation: Operation;
