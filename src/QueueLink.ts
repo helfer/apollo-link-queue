@@ -77,7 +77,7 @@ export default class QueueLink extends ApolloLink {
         const key: string = QueueLink.key(entry.operation.operationName, 'enqueue');
         if (key in QueueLink.listeners) {
             QueueLink.listeners[key].forEach((listener) => {
-                listener(entry)
+                listener(entry);
             });
         }
     }
