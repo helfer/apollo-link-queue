@@ -27,7 +27,7 @@ export default class QueueLink extends ApolloLink {
             const key: string = QueueLink.key(operation.operationName, 'dequeue');
             if (key in QueueLink.listeners) {
                 QueueLink.listeners[key].forEach((listener) => {
-                    return listener({ operation, forward, observer });
+                    listener({ operation, forward, observer });
                 });
             }
             forward(operation).subscribe(observer);
@@ -76,7 +76,9 @@ export default class QueueLink extends ApolloLink {
 
         const key: string = QueueLink.key(entry.operation.operationName, 'enqueue');
         if (key in QueueLink.listeners) {
-            QueueLink.listeners[key].forEach((listener) => listener(entry));
+            QueueLink.listeners[key].forEach((listener) => {
+                listener(entry)
+            });
         }
     }
 }
