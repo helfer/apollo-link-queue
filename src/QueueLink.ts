@@ -17,15 +17,37 @@ interface OperationQueueEntry {
 }
 
 export default class QueueLink extends ApolloLink {
+    static listeners: Record< string, ((entry: any) => void)[] > = {};
     private opQueue: OperationQueueEntry[] = [];
     private isOpen = true;
 
     public open() {
         this.isOpen = true;
         this.opQueue.forEach(({ operation, forward, observer }) => {
+            const key: string = QueueLink.key(operation.operationName, 'dequeue');
+            if (key in QueueLink.listeners) {
+                QueueLink.listeners[key].forEach((listener) => {
+                    listener({ operation, forward, observer });
+                });
+            }
             forward(operation).subscribe(observer);
         });
         this.opQueue = [];
+    }
+
+    public static addLinkQueueEventListener = (opName: string, event: 'dequeue' | 'enqueue', listener: (entry: any) => void) => {
+        const key: string = QueueLink.key(opName, event);
+
+        const newListener = { [key]: [
+            ...(key in QueueLink.listeners ? QueueLink.listeners[key] : []),
+            ...[listener], ]
+        };
+
+        QueueLink.listeners = { ...QueueLink.listeners, ...newListener };
+    };
+
+    private static key(op: string, ev: string) {
+        return `${op}${ev}`.toLocaleLowerCase();
     }
 
     public close() {
@@ -52,5 +74,12 @@ export default class QueueLink extends ApolloLink {
 
     private enqueue(entry: OperationQueueEntry) {
         this.opQueue.push(entry);
+
+        const key: string = QueueLink.key(entry.operation.operationName, 'enqueue');
+        if (key in QueueLink.listeners) {
+            QueueLink.listeners[key].forEach((listener) => {
+                listener(entry);
+            });
+        }
     }
 }
