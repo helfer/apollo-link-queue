@@ -1,6 +1,6 @@
 {
-  "name": "apollo-link-queue",
-  "version": "3.0.0",
+  "name": "@SocialAutoTransport/apollo-link-queue",
+  "version": "3.1.0",
   "description": "A link to queue requests when a certain condition is met (eg. device is offline)",
   "dependencies": {
     "@apollo/client": "^3.1.4"
@@ -23,9 +23,9 @@
   "module": "build/dist/index.js",
   "jsnext:main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "helfer/apollo-link-queue"
+  "publishConfig": {
+    "cache": "~/.npm",
+    "registry": "https://npm.pkg.github.com/SocialAutoTransport"
   },
   "scripts": {
     "build": "tsc",
