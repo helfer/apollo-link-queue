@@ -1,6 +1,5 @@
 import {
     ApolloLink,
-    GraphQLRequest,
     Operation,
     FetchResult,
     NextLink,
@@ -25,35 +24,17 @@ export default class QueueLink extends ApolloLink {
     private opQueue: OperationQueueEntry[] = [];
     private isOpen = true;
 
-    public extract() {
-        // Convert each Operation to a GraphQLRequest so we aren't persisting functions
-        return this.opQueue.map(entry => ({
-            query: entry.operation.query,
-            variables: entry.operation.variables,
-            operationName: entry.operation.operationName,
-            context: entry.operation.getContext(),
-            extensions: entry.operation.extensions,
-        }));
+    public getQueue(): OperationQueueEntry[] {
+        return this.opQueue;
     }
 
-    public restore(client: ApolloLink, entries: GraphQLRequest[]) {
-        entries.map(graphqlRequest => {
-            const { query, variables, context } = graphqlRequest;
-            if (this.isType(query, 'mutation')) {
-                client.mutate({mutation: query, variables, context});
-            } else {
-                client.query({query, variables, context});
-            }
-        })
-    }
-
-    private isType(query: DocumentNode, type: OperationTypeNode) {
+    public isType(query: DocumentNode, type: OperationTypeNode): boolean {
         return query.definitions.filter((e) => {
             return (e as any).operation === type
         }).length > 0;
     }
 
-    private isFilteredOut(operation: Operation) {
+    private isFilteredOut(operation: Operation): boolean {
         if (!QueueLink.filter || !QueueLink.filter.length) return false;
         return operation.query.definitions.filter((e) => {
             return QueueLink.filter.includes((e as any).operation)
