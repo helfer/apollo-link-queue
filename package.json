@@ -1,6 +1,6 @@
 {
   "name": "@SocialAutoTransport/apollo-link-queue",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "A link to queue requests when a certain condition is met (eg. device is offline)",
   "dependencies": {
     "@apollo/client": "^3.1.4"

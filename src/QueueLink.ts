@@ -3,7 +3,6 @@ import {
     Operation,
     FetchResult,
     NextLink,
-    OperationTypeNode,
     DocumentNode
 } from '@apollo/client/link/core';
 import {
@@ -17,6 +16,8 @@ interface OperationQueueEntry {
     observer: Observer<FetchResult>;
     subscription?: { unsubscribe: () => void };
 }
+
+type OperationTypeNode = 'query' | 'mutation' | 'subscription';
 
 export default class QueueLink extends ApolloLink {
     static listeners: Record< string, ((entry: any) => void)[] > = {};
