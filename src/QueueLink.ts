@@ -10,7 +10,7 @@ import {
     Observer,
 } from '@apollo/client/utilities';
 
-interface OperationQueueEntry {
+export interface OperationQueueEntry {
     operation: Operation;
     forward: NextLink;
     observer: Observer<FetchResult>;
