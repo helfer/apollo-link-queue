@@ -30,6 +30,52 @@ queueLink.close();
 queueLink.open();
 ```
 
+### Optional filtering
+
+```js
+import QueueLink from 'apollo-link-queue';
+
+const queueLink = new QueueLink();
+
+// Optionally only queue mutations
+QueueLink.setFilter(['mutation']);
+
+// To start queueing requests
+queueLink.close();
+
+// To let requests pass (and execute all queued requests)
+queueLink.open();
+```
+
+### Link Queue Event Listeners
+
+Listeners allow for a system outside to be notified when an enqueue or dequeue event occurrs. You can register a listener for a specific operation name or pass the keyword "any" to listen to all operations using the static method `QueueLink.addLinkQueueEventListener()`. 
+
+`QueueLink.addLinkQueueEventListener()` takes the following parameters:
+    - Operation name to listen to. Valid values are `any` or an actual operation name string from the mutation or query you want to be alerted on.
+    - The `enqueue` or `dequeue` string to specify which event to listen to, 
+    - A callback function that takes a single parameter which will be the operation from the queue that is being acted upon.
+
+```js
+    QueueLink.addLinkQueueEventListener("insert_myObject", "enqueue", (item: any) => {
+      console.log('QueueLink listener (insert_myObject, enqueued) fired with item: ', item);
+    });
+
+    QueueLink.addLinkQueueEventListener("insert_myObject", "dequeue", (item: any) => {
+      console.log('QueueLink listener (insert_myObject, dequeue) fired with item: ', item);
+    });
+```
+
+```js
+    QueueLink.addLinkQueueEventListener("any", "enqueue", (item: any) => {
+      console.log('QueueLink listener (any, enqueued) fired with item: ', item);
+    });
+
+    QueueLink.addLinkQueueEventListener("any", "dequeue", (item: any) => {
+      console.log('QueueLink listener (any, dequeue) fired with item: ', item);
+    });
+```
+
 ### Offline mode example with queueing and retry
 
 ```js
