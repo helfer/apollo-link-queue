@@ -44,16 +44,23 @@ export default class QueueLink extends ApolloLink {
 
     public open() {
         this.isOpen = true;
-        this.opQueue.forEach(({ operation, forward, observer }) => {
+        const opQueueCopy = [...this.opQueue];
+        this.opQueue = [];
+        opQueueCopy.forEach(({ operation, forward, observer }) => {
             const key: string = QueueLink.key(operation.operationName, 'dequeue');
             if (key in QueueLink.listeners) {
                 QueueLink.listeners[key].forEach((listener) => {
                     listener({ operation, forward, observer });
                 });
             }
+            const keyAny: string = QueueLink.key('any', 'dequeue');
+            if (keyAny in QueueLink.listeners) {
+                QueueLink.listeners[keyAny].forEach((listener) => {
+                    listener({ operation, forward, observer });
+                });
+            }
             forward(operation).subscribe(observer);
         });
-        this.opQueue = [];
     }
 
     public static addLinkQueueEventListener = (opName: string, event: 'dequeue' | 'enqueue', listener: (entry: any) => void) => {
@@ -106,6 +113,13 @@ export default class QueueLink extends ApolloLink {
         const key: string = QueueLink.key(entry.operation.operationName, 'enqueue');
         if (key in QueueLink.listeners) {
             QueueLink.listeners[key].forEach((listener) => {
+                listener(entry);
+            });
+        }
+
+        const keyAny: string = QueueLink.key('any', 'enqueue');
+        if (keyAny in QueueLink.listeners) {
+            QueueLink.listeners[keyAny].forEach((listener) => {
                 listener(entry);
             });
         }
