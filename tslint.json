@@ -1,8 +1,6 @@
 {
     "extends": "tslint:latest",
     "rules": {
-        "no-unnecessary-type-assertion": true,
-
         "array-type": [true, "array"],
         "ban-types": {
             "options": [
@@ -13,13 +11,11 @@
                 ["String", "Avoid using the `String` type. Did you mean `string`?"]
             ]
         },
-        "boolean-trivia": true,
         "class-name": true,
         "comment-format": [true,
             "check-space"
         ],
         "curly":[true, "ignore-same-line"],
-        "debug-assert": true,
         "indent": [true,
             "spaces"
         ],
@@ -27,24 +23,13 @@
         "interface-over-type-literal": true,
         "jsdoc-format": true,
         "linebreak-style": [true, "LF"],
-        "next-line": [true,
-            "check-catch",
-            "check-else"
-        ],
-        "no-bom": true,
-        "no-double-space": true,
-        "no-in-operator": true,
-        "no-increment-decrement": true,
         "no-inferrable-types": true,
         "no-internal-module": true,
         "no-null-keyword": true,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": [true, "ignore-template-strings"],
-        "no-type-assertion-whitespace": true,
-        "no-unnecessary-qualifier": true,
         "no-var-keyword": true,
         "object-literal-shorthand": true,
-        "object-literal-surrounding-space": true,
         "one-line": [true,
             "check-open-brace",
             "check-whitespace"
@@ -57,7 +42,6 @@
         "semicolon": [true, "always", "ignore-bound-class-methods"],
         "space-within-parens": true,
         "triple-equals": true,
-        "type-operator-spacing": true,
         "typedef-whitespace": [
             true,
             {
@@ -90,7 +74,6 @@
 
         "arrow-parens": false,
         "arrow-return-shorthand": false,
-        "ban-types": false,
         "forin": false,
         "member-access": false,
         "no-conditional-assignment": false,
@@ -106,13 +89,11 @@
         "prefer-conditional-expression": false,
         "radix": false,
         "trailing-comma": false,
-
         "align": false,
         "eofline": false,
         "max-line-length": false,
         "no-consecutive-blank-lines": false,
         "space-before-function-paren": false,
-
         "ban-comma-operator": false,
         "max-classes-per-file": false,
         "member-ordering": false,
@@ -122,5 +103,5 @@
         "no-reference": false,
         "object-literal-sort-keys": false,
         "one-variable-per-declaration": false
-	}
+    }
 }
