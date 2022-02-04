@@ -1,9 +1,9 @@
 {
   "name": "apollo-link-queue",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A link to queue requests when a certain condition is met (eg. device is offline)",
   "dependencies": {
-    "@apollo/client": "^3.1.4"
+    "@apollo/client": "^3.2.4"
   },
   "devDependencies": {
     "@types/graphql": "^0.11.7",
@@ -17,7 +17,7 @@
     "react-scripts-ts": "^2.6.0",
     "ts-jest": "22.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^2.6.2"
+    "typescript": "^4.1.3"
   },
   "main": "build/dist/index.js",
   "module": "build/dist/index.js",
