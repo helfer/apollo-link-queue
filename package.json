@@ -12,10 +12,10 @@
     "codecov": "^3.7.1",
     "graphql": "^0.11.7",
     "graphql-tag": "^2.4.2",
-    "jest": "^23.0.1",
+    "jest": "^29.3.1",
     "nyc": "^11.2.1",
-    "react-scripts-ts": "^2.6.0",
-    "ts-jest": "22.0.1",
+    "react-scripts-ts": "^4.0.8",
+    "ts-jest": "29.0.3",
     "tslint": "^5.11.0",
     "typescript": "^4.1.3"
   },
